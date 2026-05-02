@@ -1,0 +1,82 @@
+from sage.all import QQbar, polygen
+
+def preimage_polynomial(f):
+    """
+    Given a polynomial f, returns the polynomial whose roots are the preimages under f
+    of its critical values, excluding the critical points.
+
+    Parameters:
+    f (Polynomial): A polynomial over QQbar.
+
+    Returns:
+    Polynomial: The resulting polynomial over QQbar.
+    """
+    x = f.parent().gen()
+    # Compute the derivative of f
+    fp = f.derivative()
+    # Find the critical points (roots of the derivative)
+    critical_points = fp.roots(multiplicities=False)
+    # Compute the critical values
+    critical_values = [f(cp) for cp in critical_points]
+    # Initialize the resulting polynomial
+    result_poly = f.parent()(1)  # Start with polynomial "1" in f's parent ring
+
+    for c in critical_values:
+        # Compute f(x) - c
+        q = f - c
+        # Factor f(x) - c
+        factors = q.factor()
+        # Remove factors corresponding to critical points
+        p = f.parent()(1)
+        for factor, multiplicity in factors:
+            # Get the roots of the factor
+            roots = factor.roots(multiplicities=False)
+            # Check if any root is a critical point
+            is_critical_factor = False
+            for r in roots:
+                # Compare with critical points
+                if any(r == cp for cp in critical_points):
+                    is_critical_factor = True
+                    break
+            if not is_critical_factor:
+                # Include the factor if it doesn't correspond to a critical point
+                p *= factor^multiplicity
+        # Multiply the result by p
+        result_poly *= p
+
+    # Return the resulting polynomial
+    return result_poly
+
+def main():
+    # Define the variable over the field of algebraic numbers QQbar
+    x = polygen(QQbar)
+
+    A=1
+    B=1
+    f = f = x^4+2*A*x^2+4*B*x
+
+    print("Polynomial f(x):")
+    print(f)
+    
+    # Compute the preimage polynomial
+    preimage_poly = preimage_polynomial(f)
+    a1 = ZZ(round(preimage_poly[5].real()))
+    a2 = ZZ(round(preimage_poly[4].real()))
+    a3 = ZZ(round(preimage_poly[3].real()))
+    a4 = ZZ(round(preimage_poly[2].real()))
+    a5 = ZZ(round(preimage_poly[1].real()))
+    a6 = ZZ(round(preimage_poly[0].real()))
+    sextic=x^6+a1*x^5+a2*x^4+a3*x^3+a4*x^2+a5*x+a6
+
+    # Output the resulting polynomial
+    print("\nPolynomial with roots being the preimages of critical values (excluding critical points):")
+    print(sextic)
+    print(discriminant(sextic))
+
+    # For demonstration, let's factor the polynomial
+    factors = preimage_poly.factor()
+    print("\nFactored form:")
+    print(factors)
+
+if __name__ == "__main__":
+    main()
