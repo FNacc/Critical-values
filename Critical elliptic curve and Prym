@@ -1,0 +1,46 @@
+# Sage builds an elliptic curve branching at the critical values of a given quartic or its Prym in the Jacobian of the correspondence genus 2 curve 
+
+CC = ComplexField(100)
+
+x = var('x')
+
+a = 1
+b = 1
+E = EllipticCurve([0, 0, 0, a, b]) 
+
+print("Elliptic curve E in short Weierstrass form:")
+print(E)
+print("with j-invariant")
+print(E.j_invariant())
+
+cubic_poly = x^3 + a*x + b
+two_torsion_points = cubic_poly.roots(ring=CC, multiplicities=False)
+
+psi3 = E.division_polynomial(3)
+new_torsion_points = [psi3(x_val) for x_val in two_torsion_points]
+# or for Prym:
+#new_torsion_points = [x_val^2 for x_val in two_torsion_points]
+
+f_new = (x - new_torsion_points[0]) * (x - new_torsion_points[1]) * (x - new_torsion_points[2])
+f_expanded_new = f_new.expand()
+
+a2_new = f_expanded_new.coefficient(x, 2).real()
+a4_new = f_expanded_new.coefficient(x, 1).real()
+a6_new = f_expanded_new.coefficient(x, 0).real()
+
+# Define the new elliptic curve E'
+E_new = EllipticCurve([0, ZZ(round(a2_new)), 0, ZZ(round(a4_new)), ZZ(round(a6_new))])
+
+# 3-division polynomial of the new elliptic curve
+psi3_new = E_new.division_polynomial(3)
+
+psi3_new_rounded = psi3_new.map_coefficients(lambda c: ZZ(round(c)))
+
+print("Elliptic curve E' in Weierstrass form:")
+print(E_new)
+print("with j-invariant")
+print(E_new.j_invariant())
+
+
+print("Rounded 3-Division Polynomial of the new elliptic curve E':")
+print(psi3_new_rounded)
