@@ -1,0 +1,10 @@
+def critical_values_exact(f):
+  x = f.parent().gen()
+  fp = f.derivative()
+  critical_points = fp.roots(multiplicities=False)
+  critical_values = []
+  for cp in critical_points:
+    cv = f(cp)
+    cv_radical = cv.radical_expression()
+    critical_values.append((cv==cv_radical))
+  return critical_values
