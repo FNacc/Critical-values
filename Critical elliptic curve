@@ -1,0 +1,35 @@
+// Function to compute the hyperelliptic curve C: y^2 = disc_t(f(t)-x)
+// or up to a twist if the leading coefficient is not a square
+function CriticalValueCurve(f)
+    K := Rationals(); // The base field, assumed to be QQ
+    R<x> := Parent(f); // Polynomial ring in x over K
+
+    // Step 1: Introduce a new variable t
+    S<t> := PolynomialRing(K);
+    R2<x, t> := PolynomialRing(K, 2);
+
+    // Step 2: Consider g(x, t) = f(x) - t
+    g := Evaluate(f, x) - t;
+
+    // Step 3: Compute the discriminant of g with respect to x
+    D := Discriminant(g, x); // D is a polynomial in t
+    h := UnivariatePolynomial(D);
+    print(h);
+    E := UnivariatePolynomial(D)/LeadingCoefficient(D);
+    print E;
+    
+    C := HyperellipticCurve(E);
+
+    // Return the discriminant curve
+    return QuadraticTwist(C,-1);
+end function;
+
+K := Rationals();
+R<x> := PolynomialRing(K);
+a := 1;
+b := 1;
+f := x^4 + 2*a*x^2 + 4*b*x;
+p := Derivative(f);
+C := CriticalValueCurve(f);
+J := Jacobian(C);
+print(J);
