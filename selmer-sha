@@ -24,3 +24,29 @@ print("dim E(Q)[2] =", t2)
 # 2-Selmer dimension
 s2 = E.selmer_rank(algorithm='pari')
 print("dim Sel_2 =", s2)
+
+try:
+    s2_mwrank = E.selmer_rank(algorithm='mwrank')
+    print("dim Sel_2 from mwrank =", s2_mwrank)
+except Exception as err:
+    print("mwrank selmer_rank failed:", err)
+
+sha2dim = s2 - r - t2
+print("dim Sha[2] =", sha2dim)
+print("#Sha[2] =", 2**sha2dim)
+
+# Use LMFDB input: #Sha = 16
+sha_order = 16
+
+if sha_order == 16:
+    if sha2dim == 4:
+        print("Conclusion: Sha is compatible with (Z/2)^4.")
+        print("rad(Sha[2]) = 0.")
+    elif sha2dim == 2:
+        print("Conclusion: Sha is compatible with (Z/4)^2.")
+        print("rad(Sha[2]) is NONTRIVIAL, in fact rad(Sha[2]) = Sha[2].")
+    else:
+        print("Unexpected: #Sha=16 with dim Sha[2] =", sha2dim)
+        print("Check rank/Selmer/Sha data.")
+else:
+    print("This script only classified the #Sha=16 case.")
