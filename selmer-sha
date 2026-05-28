@@ -1,4 +1,4 @@
-# computes selmer
+# computes selmer and sha[2]\sha[4]
 
 E = EllipticCurve(QQ, [0, -1, 0, -202513096, -1109425945104])
 E = E.minimal_model()
