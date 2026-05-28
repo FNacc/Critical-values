@@ -1,0 +1,26 @@
+# computes selmer
+
+E = EllipticCurve(QQ, [0, -1, 0, -202513096, -1109425945104])
+E = E.minimal_model()
+
+print("E =", E)
+print("conductor =", E.conductor())
+print("label =", E.cremona_label())
+print("minimal a-invariants =", E.a_invariants())
+
+# Proven rank if Sage can prove it
+r = E.rank(proof=True)
+print("rank =", r)
+
+# Rational torsion and rational 2-torsion dimension
+T = E.torsion_subgroup()
+Tinvs = T.invariants()
+t2 = sum(1 for n in Tinvs if n % 2 == 0)
+
+print("torsion =", T)
+print("torsion invariants =", Tinvs)
+print("dim E(Q)[2] =", t2)
+
+# 2-Selmer dimension
+s2 = E.selmer_rank(algorithm='pari')
+print("dim Sel_2 =", s2)
