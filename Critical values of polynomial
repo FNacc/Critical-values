@@ -1,10 +1,25 @@
+from sage.all import QQbar, polygen, sqrt
+
 def critical_values_exact(f):
-  x = f.parent().gen()
-  fp = f.derivative()
-  critical_points = fp.roots(multiplicities=False)
-  critical_values = []
-  for cp in critical_points:
-    cv = f(cp)
-    cv_radical = cv.radical_expression()
-    critical_values.append((cv==cv_radical))
-  return critical_values
+    x = f.parent().gen()
+    fp = f.derivative()
+    critical_points = fp.roots(multiplicities=False)
+    critical_values = []
+    for cp in critical_points:
+        cv = f(cp)
+        cv_radical = cv.radical_expression()
+        critical_values.append(cv_radical)
+    return critical_values
+
+def main():
+
+    x = polygen(QQbar)
+    f = QQbar(1)/63*(x**4 - 42*x**2 - 28*x + 294)
+    critical_values_f = critical_values_exact(f)
+    print("\nCritical values of f:")
+    for i, cv in enumerate(critical_values_f, 1):
+        print(f"Critical value {i}:\n {cv}")
+        print()
+
+if __name__ == "__main__":
+    main()
