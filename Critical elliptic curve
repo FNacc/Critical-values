@@ -1,4 +1,4 @@
-// Function to compute the hyperelliptic curve C: y^2 = disc_t(f(t)-x)
+// MAGMA Function to compute the hyperelliptic curve C: y^2 = disc_t(f(t)-x)
 // or up to a twist if the leading coefficient is not a square
 function CriticalValueCurve(f)
     K := Rationals(); // The base field, assumed to be QQ
