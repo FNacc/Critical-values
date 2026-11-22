@@ -1,5 +1,5 @@
 \\ For given A, PARI computes rank bounds and 2-Selmer ranks of E_f^(-1) and F_f; if L(E_f^(-1),1) != 0, it also
-\\ determines Sha(E_f^(-1))[4] and computes the analytic order of Sha(E_f^(-1)) (Remarks 5.7.4-5.7.7).
+\\ determines Sha(E_f^(-1))[4] and computes the analytic order of Sha(E_f^(-1)) (Remarks 5.7.4-5.7.6).
 sha(A) = {
   my(E = ellinit([0,2*A^2,0,A^4+72*A,8*A^3+432]), F = ellinit([0,A,0,0,4]), rE = ellrank(E), rF = ellrank(F,2), an = ellanalyticrank(E));
   printf("A = %d, N = %d: rk F in [%d,%d], dim Sel2(F) = %d, dim Sel2(E) = %d\n", A, ellglobalred(E)[1], rF[1], rF[2], rF[2]+rF[3], rE[2]+rE[3]);
