@@ -1,0 +1,19 @@
+\\ PARI Finds all rational j = j(Z_f) for which E_f and E'_f are isogenous over Qbar, using the modular polynomials
+\\ Phi_N for every N admitting a rational cyclic N-isogeny, and decides which are isogenous over Q.
+\\ I then checks the curves of Theorem 4 (Section 6.5, Proposition 6.4, Theorem 4).
+phi(N) = {  \\ classical modular polynomial Phi_N(X,Y)
+  if(N==1, return(X-Y)); if(isprime(N), return(polmodular(N,0,X,Y)));
+  my(p=factor(N)[1,1], k=factor(N)[1,2], m=p^k);
+  if(m<N, return(polresultant(subst(phi(m),Y,Z), subst(phi(N/m),X,Z), Z)));
+  polresultant(subst(phi(N/p),Y,Z), subst(phi(p),X,Z), Z) / phi(N/p^2)^if(k==2,p+1,p);
+}
+num(N) = {  \\ numerator of Phi_N(j(E_f), j(E'_f)) as a polynomial in t = j(Z_f)
+  my(P=phi(N), n=poldegree(P,X), a=t*(t-1536)^3, b=2^18*(t-1728), c=t^2, d=4*(t-1728), Q);
+  sum(i=0, n, Q=polcoef(P,i,X); sum(k=0, poldegree(Q,Y), polcoef(Q,k,Y)*c^k*d^(n-k))*a^i*b^(n-i));
+}
+curves(j) = my(u=27*j/(4*(1728-j))); [ellinit(elltwist([0,2*u^2,0,u^4+18*u^3,2*u^5+27*u^4],-4)), ellinit([0,-u,0,0,-u^2])];   \\ [E_f, E'_f] with j(Z_f) = j
+qisog(E,F) = my(m=ellminimalmodel(F)[1..5]); #[1 | c <- ellisomat(E)[1], ellminimalmodel(ellinit(c[1]))[1..5]==m] > 0;   \\ E, F isogenous over Q
+{foreach(concat([1..19],[21,25,27,37,43,67,163]), N,
+  foreach(nfroots(,num(N)), j, if(j!=0 && j!=1728, my(C=curves(j)); print("N=",N,"  j=",j,"  E_j ~ E'_j over Q: ",qisog(C[1],C[2])))));}
+{foreach([[15,16,[0,0,0,-75,-506]],[45,18,[0,0,0,45,-18]],[5,10,[0,0,0,-675,-79650]]], v,
+  my(C=curves(1728*4*v[1]^3/(4*v[1]^3+27*v[2]^2))); print("Theorem 4, f = X^4+",2*v[1],"X^2+",4*v[2],"X: ", qisog(C[1],C[2]) && qisog(C[1],ellinit(v[3]))));}
