@@ -1,52 +1,10 @@
-# computes selmer and sha[2]\sha[4]
-
-E = EllipticCurve(QQ, [0, -1, 0, -202513096, -1109425945104])
-E = E.minimal_model()
-
-print("E =", E)
-print("conductor =", E.conductor())
-print("label =", E.cremona_label())
-print("minimal a-invariants =", E.a_invariants())
-
-# Proven rank if Sage can prove it
-r = E.rank(proof=True)
-print("rank =", r)
-
-# Rational torsion and rational 2-torsion dimension
-T = E.torsion_subgroup()
-Tinvs = T.invariants()
-t2 = sum(1 for n in Tinvs if n % 2 == 0)
-
-print("torsion =", T)
-print("torsion invariants =", Tinvs)
-print("dim E(Q)[2] =", t2)
-
-# 2-Selmer dimension
-s2 = E.selmer_rank(algorithm='pari')
-print("dim Sel_2 =", s2)
-
-try:
-    s2_mwrank = E.selmer_rank(algorithm='mwrank')
-    print("dim Sel_2 from mwrank =", s2_mwrank)
-except Exception as err:
-    print("mwrank selmer_rank failed:", err)
-
-sha2dim = s2 - r - t2
-print("dim Sha[2] =", sha2dim)
-print("#Sha[2] =", 2**sha2dim)
-
-# Use LMFDB input: #Sha = 16
-sha_order = 16
-
-if sha_order == 16:
-    if sha2dim == 4:
-        print("Conclusion: Sha is compatible with (Z/2)^4.")
-        print("rad(Sha[2]) = 0.")
-    elif sha2dim == 2:
-        print("Conclusion: Sha is compatible with (Z/4)^2.")
-        print("rad(Sha[2]) is NONTRIVIAL, in fact rad(Sha[2]) = Sha[2].")
-    else:
-        print("Unexpected: #Sha=16 with dim Sha[2] =", sha2dim)
-        print("Check rank/Selmer/Sha data.")
-else:
-    print("This script only classified the #Sha=16 case.")
+\\ For given A, PARI computes rank bounds and 2-Selmer ranks of E_f^(-1) and F_f; if L(E_f^(-1),1) != 0, it also
+\\ determines Sha(E_f^(-1))[4] and computes the analytic order of Sha(E_f^(-1)) (Remarks 5.7.4-5.7.7).
+sha(A) = {
+  my(E = ellinit([0,2*A^2,0,A^4+72*A,8*A^3+432]), F = ellinit([0,A,0,0,4]), rE = ellrank(E), rF = ellrank(F,2), an = ellanalyticrank(E));
+  printf("A = %d, N = %d: rk F in [%d,%d], dim Sel2(F) = %d, dim Sel2(E) = %d\n", A, ellglobalred(E)[1], rF[1], rF[2], rF[2]+rF[3], rE[2]+rE[3]);
+  if (an[1], printf("  analytic rank of E = %d\n", an[1]); return);
+  printf("  L(E,1) = %.6f != 0, so rk E = 0 and dim Sha(E)[2] = %d; s = %d", an[2], rE[2]+rE[3], rE[3]);
+  if (!rE[3], printf(", so Sha(E)[4] = (Z/4)^%d", rE[2]));
+  printf("; |Sha_an(E)| = %.4f\n", an[2]/ellbsd(E));
+}
