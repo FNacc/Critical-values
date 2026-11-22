@@ -1,4 +1,4 @@
-\\ sage function to compute the critical values of a polynomial f
+""" sage function to compute the critical values of a polynomial f"""
 from sage.all import QQbar, polygen, sqrt
 
 def critical_values_exact(f):
@@ -15,7 +15,7 @@ def critical_values_exact(f):
 def main():
 
     x = polygen(QQbar)
-    f = QQbar(1)/63*(x**4 - 42*x**2 - 28*x + 294) \\ any f
+    f = QQbar(1)/63*(x**4 - 42*x**2 - 28*x + 294) """ any f"""
     critical_values_f = critical_values_exact(f)
     print("\nCritical values of f:")
     for i, cv in enumerate(critical_values_f, 1):
