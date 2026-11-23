@@ -5,40 +5,28 @@ from sage.all import QQbar, polygen
 
 def preimage_polynomial(f):
     """
-    Given a polynomial f, returns the polynomial whose roots are the preimages under f
+    Given a polynomial f over QQbar, returns the polynomial whose roots are the preimages under f
     of its critical values, excluding the critical points.
 
-    Parameters:
-    f (Polynomial): A polynomial over QQbar.
-
-    Returns:
-    Polynomial: The resulting polynomial over QQbar.
     """
     x = f.parent().gen()
-    # Compute the derivative of f
     fp = f.derivative()
-    # Find the critical points (roots of the derivative)
     critical_points = fp.roots(multiplicities=False)
-    # Compute the critical values
     critical_values = [f(cp) for cp in critical_points]
-    # Initialize the resulting polynomial
     result_poly = f.parent()(1) 
 
     for c in critical_values:
         q = f - c
         factors = q.factor()
-        # Remove factors corresponding to critical points
         p = f.parent()(1)
         for factor, multiplicity in factors:
             roots = factor.roots(multiplicities=False)
-            # Check if any root is a critical point
             is_critical_factor = False
             for r in roots:
                 if any(r == cp for cp in critical_points):
                     is_critical_factor = True
-                    break
+                    break  # Remove factors corresponding to critical points
             if not is_critical_factor:
-                # Include the factor if it doesn't correspond to a critical point
                 p *= factor^multiplicity
         result_poly *= p
 
