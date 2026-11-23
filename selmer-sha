@@ -8,3 +8,5 @@ sha(A) = {
   if (!rE[3], printf(", so Sha(E)[4] = (Z/4)^%d", rE[2]));
   printf("; |Sha_an(E)| = %.4f\n", an[2]/ellbsd(E));
 }
+sha(3037) \\ gives an example where the twisted Prym has rank 4 while the twisted critical curve has rank 0, and therefore Sha of size at least
+\\ 256, which is confirmed by the analytic computation
