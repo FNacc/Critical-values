@@ -1,6 +1,6 @@
 \\ PARI Finds all rational j = j(Z_f) for which E_f and E'_f are isogenous over Qbar, using the modular polynomials
 \\ Phi_N for every N admitting a rational cyclic N-isogeny, and decides which are isogenous over Q.
-\\ I then checks the curves of Theorem 4 (Section 6.5, Proposition 6.4, Theorem 4).
+\\ It then checks isogeny between the pairs of curves listed in Theorem 4 (rather than simply between a pair of their twists) (Proposition 6.4, Theorem 4).
 phi(N) = {  \\ classical modular polynomial Phi_N(X,Y)
   if(N==1, return(X-Y)); if(isprime(N), return(polmodular(N,0,X,Y)));
   my(p=factor(N)[1,1], k=factor(N)[1,2], m=p^k);
