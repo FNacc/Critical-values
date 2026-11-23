@@ -1,4 +1,4 @@
-// MAGMA Function to compute the hyperelliptic curve C: y^2 = disc_t(f(t)-x)
+// MAGMA Function to compute the hyperelliptic curve C: y^2 = disc_t(f(t)-x) and its Jacobian
 // or up to a twist if the leading coefficient is not a square
 function CriticalValueCurve(f)
     K := Rationals();
@@ -11,7 +11,7 @@ function CriticalValueCurve(f)
     g := Evaluate(f, x) - t;
 
     // Compute the discriminant of g with respect to x
-    D := Discriminant(g, x); // D is a polynomial in t
+    D := Discriminant(g, x); 
     h := UnivariatePolynomial(D);
     print(h);
     E := UnivariatePolynomial(D)/LeadingCoefficient(D);
@@ -19,8 +19,7 @@ function CriticalValueCurve(f)
     
     C := HyperellipticCurve(E);
 
-    // Return the discriminant curve
-    return QuadraticTwist(C,-1);
+    return QuadraticTwist(C,-1); // We need to twist because we divided by the leading coefficient, which if f is monic is in -K^2
 end function;
 
 K := Rationals();
