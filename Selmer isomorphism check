@@ -1,17 +1,19 @@
-\\ Compares the orders of the 4-Selmer groups of E_f^(-1) and F_f, f = X^4+2AX^2-8X,
-\\ for A = 13 mod 16 with |A| <= B, counting agreements in each class of A mod 64 (Conjecture 1).
+\\ Checks whether the twists by d of E_f^(-1) and F_f, f = X^4+2AX^2-8X, have 4-Selmer groups of the same order (Conjecture 1, Remark 5.7.5).
 sel4(a) = {my(v=ellrank(ellinit(a))); 2*v[2]+v[3]};   \\ log_2 #Sel_4(E/Q), for E without rational 2-torsion as in our case
+tw(a,d) = [0, d*a[2], 0, d^2*a[4], d^3*a[5]];
+agree(A,d) = sel4(tw([0,27*A^2,0,216*A^4+5832*A,432*A^6+23328*A^3+314928],d))==sel4(tw([0,-2*A,0,A^2,4],d));
+
+\\ Counts agreements for the trivial twist, for A = 13 mod 16 with |A| <= B, in each class of A mod 64 (Conjecture 1).
 search(B) = {
   my(M=matrix(4,2));
   forstep(A=-B+(B-3)%16, B, 16,
     if(A==-3, next);
     my(i=(lift(Mod(A,64))-13)/16+1);
     M[i,1]++;
-    M[i,2]+=(sel4([0,27*A^2,0,216*A^4+5832*A,432*A^6+23328*A^3+314928])==sel4([0,-2*A,0,A^2,4])));
+    M[i,2]+=agree(A,1));
   M;
 }
-print(M);
+print(search(60000));
 
-\\ Compares the same orders on the twists by -443 for A = 125, i.e. on the twists by 443 of E_f and E'_f (Remark 5.7.5).
-tw(a,d) = [0, d*a[2], 0, d^2*a[4], d^3*a[5]];
-A=125; print([sel4(tw([0,27*A^2,0,216*A^4+5832*A,432*A^6+23328*A^3+314928],-443)), sel4(tw([0,-2*A,0,A^2,4],443))]);
+\\ Checks the twists by -443 for A = 125, i.e. the twists by 443 of E_f and E'_f (Remark 5.7.5).
+print(agree(125,-443));
